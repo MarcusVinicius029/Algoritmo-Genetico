@@ -3,28 +3,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def funcao(n):
-    return round(n**2)
-
+    return -n**2 + 5
 def main():
-    start = AlgoritmoGenetico(x_min = 0, x_max=10, tamanhoPopulacao = 5, n_geracoes = 25, taxa_mutacao = 1, taxa_crossover = 50, funcao=funcao)
+    start = AlgoritmoGenetico(x_min = 0, x_max=10, tamanhoPopulacao = 10, n_geracoes = 1000, taxa_mutacao = 0.2, taxa_crossover = 0.1, funcao=funcao)
     print(start.populacao)
-    aptidao_melhor = []
+    melhor_aptidao = []
     aptidao_media = []
     geracoes = []
     for n in range(start.n_geracoes):
         new_pop = []
         while len(new_pop) <= start.tamanhoPopulacao:
             individuos = start.selecionar()
-            filho = start.cruzamento(individuos[0], individuos[1])
-            filho_final = start.mutacao(filho)
-            new_pop.append(filho_final)
+            filhos = start.cruzamento(individuos[0], individuos[1])
+            filhos_final = start.mutacao(filhos)
+            for a in range(2):
+                new_pop.append(filhos_final[a])
         start.populacao = new_pop
-        aptidao_melhor.append(max(start.populacao))
+        melhor_aptidao.append(max(start.funcaoObjetivo()))
         aptidao_media.append(sum(new_pop)/len(new_pop))
         geracoes.append(n)
 
     print(start.populacao)
-    plt.plot(geracoes, aptidao_melhor, label = "Melhor Aptidão")
+    plt.plot(geracoes, melhor_aptidao, label = "Melhor Aptidão")
     plt.plot(geracoes, aptidao_media, label = "Aptidão Média")
     plt.title("Algoritmo Genético")
     plt.xlabel("Geração")
